@@ -1,0 +1,16 @@
+#include "priority_queue.h"
+
+int main() {
+    as::PQueue pq(15);
+
+    pq.insert(40);
+    pq.insert(54);
+    pq.insert(12);
+    pq.insert(87);
+    pq.insert(53);
+    pq.insert(11);
+
+    pq.printHeap();
+
+    return 0;
+}

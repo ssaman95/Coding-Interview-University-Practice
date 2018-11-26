@@ -1,0 +1,68 @@
+#include <iostream>
+#include "slist.h"
+
+namespace as {
+
+template<class T>
+SList<T>::~SList() {
+    SNode<T> *current = head_;
+    SNode<T> *next = nullptr;
+
+
+    while (current) {
+        next = current;
+        delete current;
+        current = next;
+    }
+}
+
+template<class T>
+const T & SList<T>::ValueAt(int index) {
+    if (index < 0) {
+        std::cout << "Negative Index\n" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    auto current = head_;
+    int i = 0;
+
+    for (; i < index && current; ++i) {
+        current = current->GetNext();
+    }
+
+    if (current == nullptr) {
+        std::cout << "Index out of bounds" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    return current->GetData();
+}
+
+template<class T>
+bool SList<T>::Empty() { return head_ == nullptr; }
+
+template <class T>
+void Slist<T>::PrintDebug() const {
+    SNode<T> *current = head_;
+
+    std::cout << std::endl;
+
+    while (current != nullptr) {
+        std::cout << current->GetData() << " --> ";
+        current = current->GetNext();
+    }
+
+    std::cout << std::endl;
+}
+
+template <class T>
+void PushFront(T value) {
+    SNode<T> *node = new SNode<T>{value};
+    node->next_ = head_;
+
+    head_ = node;
+}
+
+template <class T>
+const T PopFront() {
+    if (

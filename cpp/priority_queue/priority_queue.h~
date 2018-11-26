@@ -1,0 +1,146 @@
+#ifndef PRIORITY_QUEUE_H
+#define PRIORITY_QUEUE_H
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cassert>
+
+
+using namespace std;
+
+
+namespace as {
+
+typedef struct PriorityQueueElement {
+    int key_;
+    string value_;
+} PQElement;
+
+class PQueue {
+
+private:
+    vector<PQElement> elements_;
+    int size_;
+    int capacity_;
+
+    void shiftUp(int index);
+    void shiftDown(int index);
+    void swap(const int index1, const int index2);
+
+public:
+    PQueue(int i);
+    //~PQueue();
+
+    void insert(int key, string value);
+    PQElement getMax() const;
+    int getSize() const;
+    PQElement extractMax();
+    void remove(int index);
+    void printHeap() const;
+};
+
+
+PQueue::PQueue(int size) : size_(0), capacity_(size) {
+    vector<PQElement> elements(size);
+    elements_ = elements;
+}
+
+//PQueue::~PQueue() { delete elements_; }
+
+void PQueue::swap(const int index1, const int index2) {
+    int temp_key = elements_[index1].key_;
+    string temp_value = elements_[index1].value_;
+
+    elements_[index1].key_ = elements_[index2].key_;
+    elements_[index1].value_ = elements_[index2].value_;
+
+    elements_[index2].key_ = temp_key;
+    elements_[index2].value_ = temp_value;
+}
+
+void PQueue::shiftUp(int index) {
+    int parent = (index - 1) / 2;
+
+    while (index > 0 && elements_[parent].key_ < elements_[index].key_) {
+        swap(index, parent);
+        index = parent;
+        parent = (index - 1) / 2;
+    }
+}
+
+void PQueue::shiftDown(int index) {
+    int max_index = index;
+    int left = 2 * index + 1;
+
+    if (left < size_ && elements_[left].key_ > elements_[index].key_)
+        max_index = left;
+
+    int right = 2 * index + 2;
+
+    if (right < size_ && elements_[right].key_ > elements_[max_index].key_)
+        max_index = right;
+
+    if (max_index != index) {
+        swap(index, max_index);
+        shiftDown(max_index);
+    }
+}
+
+void PQueue::insert(int key, string value) {
+    if (size_ == capacity_) {
+        cout << "Queue is full" << endl;
+        return;
+    }
+
+    elements_[size_].key_ = key;
+    elements_[size_].value_ = value;
+
+    shiftUp(size_);
+    ++size_;
+}
+
+void PQueue::printHeap() const {
+    for (int i = 0; i < size_; ++i)
+        cout << elements_[i].key_ << " ";
+
+    cout << endl;
+}
+
+PQElement PQueue::getMax() const {
+    if (size_>0)
+        return elements_[0];
+}
+
+int PQueue::getSize() const {
+    return size_;
+}
+
+PQElement PQueue::extractMax() {
+    assert(size_ > 0);
+
+    PQElement max_element = elements_[0];
+
+    --size_;
+    if (size_ > 0) {
+        elements_[0] = elements_[size_];
+        shiftDown(0);
+    }
+
+    return max_element;
+}
+
+void PQueue::remove(int index) {
+    if (index == 0) {
+        extractMax();
+        return;
+    }
+
+    elements_[index] = elements_[--max_];
+    shiftDown(index);
+}
+
+
+} // namespace as
+
+#endif

@@ -1,0 +1,65 @@
+#include <stdio.h>
+
+#define MAX_SIZE  15
+
+void swap(int *x, int *y) {
+    int temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
+void shift_down(int arr[],int n, int i) {
+    int max = i;
+    int left = i * 2 + 1;
+
+    if (left < n && arr[max] < arr[left])
+        max = left;
+
+    int right = i*2 + 2;
+
+    if (right < n && arr[max] < arr[right])
+        max = right;
+
+    if (max != i) {
+        swap(arr + i, arr + max);
+        shift_down(arr, n, max);
+    }
+}
+
+void max_heapify(int arr[], int n) {
+    int p = (n - 2) / 2;
+
+    for(int i = p; i >= 0; --i)
+        shift_down(arr, n, i);
+}
+
+void heap_sort(int arr[], int n) {
+    max_heapify(arr, n);
+
+    /*
+    for (int i = 0; i < n; ++i) {
+        printf("%d ", arr[i]);
+    }
+
+    printf("\n");
+    */
+
+    while (n > 1) {
+        swap(arr, arr + n -1);
+        --n;
+        shift_down(arr, n, 0);
+    }
+}
+
+int main(void) {
+    int arr[MAX_SIZE] = {15, 21, 12, 8, 10, 5, 13};
+
+    heap_sort(arr, 7);
+
+    for (int i = 0; i < 7; ++i)
+        printf("%d ", arr[i]);
+
+    printf("\n");
+
+    return 0;
+}

@@ -1,0 +1,26 @@
+#include "priority_queue.h"
+
+int main() {
+    as::PQueue pq(15);
+
+    pq.insert(1, "Babu");
+    pq.insert(2, "Chuspam");
+    pq.insert(26, "Dinesh");
+    pq.insert(35, "Jharal");
+    pq.insert(58, "Chakka");
+    pq.insert(6, "Prabhash");
+    pq.insert(3, "Aman");
+
+    cout << "Size: " << pq.getSize() << endl;
+    cout << "Max Element: " << pq.getMax().key_ << endl;
+
+    pq.printHeap();
+
+    pq.extractMax();
+    pq.printHeap();
+
+    pq.remove(1);
+    pq.printHeap();
+
+    return 0;
+}
