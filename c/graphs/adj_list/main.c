@@ -19,5 +19,12 @@ int main(void) {
     printf("bfs:\n");
     bfs(g, 1);
 
+    printf("================================================\n");
+    printf("dfs:\n");
+    dfs_rec(g, 1);
+
+    printf("================================================\n");
+    printf("dfs with stack:\n");
+    dfs_iter(g, 1);
     return 0;
 }

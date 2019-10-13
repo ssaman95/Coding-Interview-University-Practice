@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <limits.h>
 #include "queue.h" // needed for bfs
+#include "stack.h" // needed for dfs
 #include "graph_adj.h"
 
 
@@ -229,4 +230,99 @@ void bfs(graph *g, int s) {
     printf("\nvert : par: dist\n");
     for (int i = 0; i < n; ++i)
         printf("%d : %d : %d\n", i, parent[i], distance[i]);
+}
+
+
+void dfs_rec(graph *g, int s) {
+    int n = g->vertex_count;
+
+    bool *seen = calloc(n, sizeof(bool));
+    check_address(seen);
+    bool *visited = calloc(n, sizeof(bool));
+    check_address(visited);
+
+    int *discovery_time = malloc(n * sizeof(int));
+    check_address(discovery_time);
+    int *finish_time = malloc(n * sizeof(int));
+    check_address(finish_time);
+
+    int time = 0;
+
+    for (int i = 0; i < n; ++i) {
+        seen[i] = visited[i] = false;
+        discovery_time[i] = finish_time[i] = time;
+    }
+
+    dfs_visit_rec(g, s, &time, visited, seen, discovery_time, finish_time);
+
+    printf("\nvert\t : disc\t : finish\n");
+    for (int i = 0; i < n; ++i) {
+        printf("%d\t : %d\t : %d\n", i, discovery_time[i], finish_time[i]);
+    }
+}
+
+void dfs_visit_rec(graph *g, int s, int *time, bool *visited, bool *seen, int *     discovery_time, int *finish_time) {
+    seen[s] = true;
+    discovery_time[s] = ++(*time);
+    printf("%d -> ", s);
+
+    adj_list_node *cur = g->adj_list_arr[s].head;
+    while (cur) {
+        if (!seen[cur->vertex]) {
+            dfs_visit_rec(g, cur->vertex, time, visited, seen, discovery_time, finish_time);
+        }
+        cur = cur->next;
+    }
+    visited[s] = true;
+    finish_time[s] = ++(*time);
+}
+
+void dfs_iter(graph *g, int s) {
+    int n = g->vertex_count;
+
+    bool *seen = calloc(n, sizeof(bool));
+    check_address(seen);
+    bool *visited = calloc(n, sizeof(bool));
+    check_address(visited);
+
+    int *discovery_time = malloc(n * sizeof(int));
+    check_address(discovery_time);
+    int *finish_time = malloc(n * sizeof(int));
+    check_address(finish_time);
+
+    int time = 0;
+
+    for (int i = 0; i < n; ++i) {
+        seen[i] = visited[i] = false;
+        discovery_time[i] = finish_time[i] = time;
+    }
+
+    stack *st = create_stack();
+    push(st,s);
+
+    while (!stack_empty(st)) {
+        int u = top(st);
+
+        if (seen[u]) {
+            visited[u] = true;
+            finish_time[u] = ++time;
+            pop(st);
+            continue;
+        } else {
+            seen[u] = true;
+            discovery_time[u] = ++time;
+        }
+
+        adj_list_node *cur = g->adj_list_arr[u].head;
+        while (cur) {
+            int v = cur->vertex;
+            if (!seen[v])
+                push(st,v);
+            cur = cur->next;
+        }
+    }
+    printf("\nvert\t : disc\t : finish\n");
+    for (int i = 0; i < n; ++i) {
+        printf("%d\t : %d\t : %d\n", i, discovery_time[i], finish_time[i]);
+    }
 }

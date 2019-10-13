@@ -34,5 +34,8 @@ void adj_list_insert(graph *g, int src, adj_list_node *dest_node);
 void adj_list_remove(graph *g, int src, int dest);
 
 void bfs(graph *g, int s);
+void dfs_rec(graph *g, int s);
+void dfs_visit_rec(graph *g, int s, int *time, bool *visited, bool *seen, int *discovery_time, int *finish_time);
+void dfs_iter(graph *g, int s);
 
 #endif
